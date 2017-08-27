@@ -39,7 +39,7 @@ class MssqlOutput < Fluent::BufferedOutput
     if @sql.nil?
       raise Fluent::ConfigError, "table missing" unless @table
 
-      @columns = @columns.split(',')
+      @columns = @columns.split(',').map(&:strip)
       cols = @columns.join(',')
       placeholders = if @format == 'json'
                        '?'
