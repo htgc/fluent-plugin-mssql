@@ -28,7 +28,7 @@ class MssqlOutput < Fluent::BufferedOutput
     if @format == 'json'
       @format_proc = Proc.new{|tag, time, record| record.to_json}
     else
-      @key_names = @key_names.split(',')
+      @key_names = @key_names.split(',').map(&:strip)
       @format_proc = Proc.new{|tag, time, record| @key_names.map{|k| record[k]}}
     end
 
@@ -39,7 +39,7 @@ class MssqlOutput < Fluent::BufferedOutput
     if @sql.nil?
       raise Fluent::ConfigError, "table missing" unless @table
 
-      @columns = @columns.split(',').map(&:strip)
+      @columns = @columns.split(',')
       cols = @columns.join(',')
       placeholders = if @format == 'json'
                        '?'
